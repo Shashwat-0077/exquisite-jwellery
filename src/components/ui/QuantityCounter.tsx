@@ -35,14 +35,14 @@ export default function QuantityCounter({ className }: { className?: string }) {
             )}
         >
             <Button
-                className="bg-transparent text-black shadow-none hover:bg-transparent"
+                className="bg-transparent text-black shadow-none hover:bg-transparent md:px-4 px-2"
                 onClick={decreaseCounter}
             >
                 <Minus size={15} />
             </Button>
             <p className="basis-[100px] text-center">{counter}</p>
             <Button
-                className="bg-transparent text-black shadow-none hover:bg-transparent"
+                className="bg-transparent text-black shadow-none hover:bg-transparent md:px-4 px-2"
                 onClick={increaseCounter}
             >
                 <Plus size={15} />
