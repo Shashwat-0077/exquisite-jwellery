@@ -36,7 +36,7 @@ export default function Store() {
                 </div>
                 <Button>Apply</Button>
             </div>
-            {/* // FIXME : Make the side component for the filter for the mobile view*/}
+            {/* // TODO : Make the side component for the filter for the mobile view */}
             <div className=""></div>
             <div className="grid w-full grid-cols-2 gap-x-9 gap-y-12 md:grid-cols-3 lg:grid-cols-4">
                 {data.map((product, index) => (
