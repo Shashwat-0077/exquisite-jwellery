@@ -7,7 +7,7 @@ import ProductCard from "@/components/ui/ProductCard";
 
 import "swiper/css";
 
-export default function Slider({
+export default function SwiperCarousel({
     data,
 }: {
     data: {
