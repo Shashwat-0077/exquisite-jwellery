@@ -98,7 +98,7 @@ export default function Checkout() {
     }
 
     return (
-        <div className="container flex gap-10 min-h-[calc(100svh-80px)] mt-10 px-32">
+        <div className="container mt-10 flex min-h-[calc(100svh-80px)] gap-10 px-32">
             <div className="w-full">
                 <Form {...form}>
                     <form
@@ -106,7 +106,7 @@ export default function Checkout() {
                         className="flex flex-col gap-7"
                     >
                         <div>
-                            <h1 className="text-2xl mb-3 font-bold">Contact</h1>
+                            <h1 className="mb-3 text-2xl font-bold">Contact</h1>
                             <FormField
                                 control={form.control}
                                 name="email"
@@ -127,7 +127,7 @@ export default function Checkout() {
                             />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold mb-3">
+                            <h1 className="mb-3 text-2xl font-bold">
                                 Delivery
                             </h1>
                             <FormField
@@ -140,7 +140,7 @@ export default function Checkout() {
                                             defaultValue={field.value}
                                         >
                                             <FormControl>
-                                                <SelectTrigger className="border-gray-400 h-12 focus-visible:ring-1 focus:outline-none focus:ring-2 !ring-primary ">
+                                                <SelectTrigger className="h-12 border-gray-400 !ring-primary focus:outline-none focus:ring-2 focus-visible:ring-1">
                                                     <SelectValue placeholder="Select a Country" />
                                                 </SelectTrigger>
                                             </FormControl>
@@ -330,14 +330,14 @@ export default function Checkout() {
                     </form>
                 </Form>
             </div>
-            <div className="w-full bg-gray-100 rounded-xl px-10 py-7">
+            <div className="w-full rounded-xl bg-gray-100 px-10 py-7">
                 <section className="flex flex-col gap-3">
                     {data.slice(0, 3).map((product, index) => (
                         <div
                             key={index}
-                            className="grid grid-cols-[1fr_1fr_3fr] items-center gap-3 w-full"
+                            className="grid w-full grid-cols-[1fr_1fr_3fr] items-center gap-3"
                         >
-                            <div className="w-[75px] rounded-lg overflow-hidden">
+                            <div className="w-[75px] overflow-hidden rounded-lg">
                                 <ImageWithFallback
                                     src={product.img}
                                     alt={product.img}
@@ -348,10 +348,10 @@ export default function Checkout() {
                         </div>
                     ))}
                 </section>
-                <section className="mt-6 flex gap-3 items-center">
+                <section className="mt-6 flex items-center gap-3">
                     <Input
                         name="discount"
-                        className="bg-white w-full h-12"
+                        className="h-12 w-full bg-white"
                         placeholder="Discount Code"
                     />
                     <Button className="h-12 px-10">Apply</Button>

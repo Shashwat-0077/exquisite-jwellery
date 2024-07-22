@@ -42,14 +42,14 @@ export default function Register() {
     }
 
     return (
-        <div className="flex justify-center items-center min-h-[calc(100svh-80px)]">
-            <div className="flex flex-col basis-[400px]">
+        <div className="flex min-h-[calc(100svh-80px)] items-center justify-center">
+            <div className="flex basis-[400px] flex-col">
                 <h1 className="text-center text-4xl">Register</h1>
                 <div className="w-full">
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
-                            className="flex flex-col justify-center items-center w-full space-y-4"
+                            className="flex w-full flex-col items-center justify-center space-y-4"
                         >
                             <FormField
                                 control={form.control}
@@ -64,7 +64,7 @@ export default function Register() {
                                         </div>
                                         <FormControl>
                                             <Input
-                                                className="border-black w-full"
+                                                className="w-full border-black"
                                                 placeholder="example@gmail.com"
                                                 {...field}
                                             />
@@ -85,7 +85,7 @@ export default function Register() {
                                         </div>
                                         <FormControl>
                                             <Input
-                                                className="border-black w-full"
+                                                className="w-full border-black"
                                                 placeholder="example@gmail.com"
                                                 {...field}
                                             />
@@ -104,7 +104,7 @@ export default function Register() {
                                             </FormLabel>
                                             <FormControl>
                                                 <Input
-                                                    className="border-black w-full"
+                                                    className="w-full border-black"
                                                     placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
                                                     {...field}
                                                 />
@@ -123,7 +123,7 @@ export default function Register() {
                                             </FormLabel>
                                             <FormControl>
                                                 <Input
-                                                    className="border-black w-full"
+                                                    className="w-full border-black"
                                                     placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
                                                     {...field}
                                                 />

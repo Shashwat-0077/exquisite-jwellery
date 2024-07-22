@@ -43,7 +43,7 @@ export default function Login() {
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
-                            className="space-y-8 flex flex-col justify-center"
+                            className="flex flex-col justify-center space-y-8"
                         >
                             <FormField
                                 control={form.control}
