@@ -20,7 +20,7 @@ export default function Qualities() {
                     if (window.scrollY - lastScroll > 10) setDisplace(-50);
                 }
                 setLastScroll(window.scrollY);
-            }, 1)
+            }, 1),
         );
     };
 
@@ -54,7 +54,7 @@ export default function Qualities() {
                     },
                 }}
                 className="absolute -left-28 -top-36 hidden h-[200px] w-[200px] lg:block"
-                src="/qualities/ring1.png"
+                src="/Qualities/ring1.png"
             ></motion.img>
             <motion.img
                 animate={{
@@ -67,7 +67,7 @@ export default function Qualities() {
                     },
                 }}
                 className="absolute -right-40 -top-32 hidden h-[200px] w-[200px] lg:block"
-                src="/qualities/ring2.png"
+                src="/Qualities/ring2.png"
             ></motion.img>
             <motion.img
                 animate={{
@@ -79,7 +79,7 @@ export default function Qualities() {
                     },
                 }}
                 className="absolute -bottom-52 left-1/2 hidden h-[200px] w-[250px] lg:block"
-                src="/qualities/ring3.png"
+                src="/Qualities/ring3.png"
             ></motion.img>
 
             <h1 className="text-[40px] font-bold">Best of All</h1>

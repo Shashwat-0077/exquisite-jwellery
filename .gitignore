@@ -19,6 +19,9 @@ dummy/
 # VS code
 .vscode
 
+#drizzle
+drizzle/
+
 # production
 /build
 

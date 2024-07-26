@@ -36,7 +36,7 @@ export default function SwiperCarousel({
                 disableOnInteraction: true,
             }}
             loop
-            spaceBetween={30}
+            // spaceBetween={30}
             className="group mb-12 w-full select-none"
             modules={[Autoplay, Pagination, Navigation]}
             onSlideChange={(swiper) => {
@@ -50,6 +50,7 @@ export default function SwiperCarousel({
             {data.map((value, index) => (
                 <SwiperSlide key={index}>
                     <ProductCard
+                        className="pr-5"
                         title={value.title}
                         price={value.price}
                         imgSrc={value.img}
