@@ -6,29 +6,26 @@ import {
     SheetFooter,
     SheetHeader,
     SheetTitle,
-    SheetTrigger,
 } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import QuantityCounter from "../ui/QuantityCounter";
-import { ShoppingCart } from "lucide-react";
-import { cn } from "@/lib/utils";
 
-export default function SideCart({ className }: { className?: string }) {
+export default function SideCart({
+    className,
+    open,
+    handleOpen,
+}: {
+    className?: string;
+    open: boolean;
+    handleOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
     const router = useRouter();
 
     return (
-        <Sheet>
-            <SheetTrigger>
-                <ShoppingCart
-                    className={cn(`cursor-pointer`, className)}
-                    color="#fff"
-                    strokeWidth={1.5}
-                    absoluteStrokeWidth
-                />
-            </SheetTrigger>
-            <SheetContent className="flex w-[300px] max-w-[auto] flex-col justify-between p-0 sm:w-[450px] sm:max-w-[auto] text-black">
+        <Sheet open={open} onOpenChange={handleOpen}>
+            <SheetContent className="flex w-[300px] max-w-[auto] flex-col justify-between p-0 text-black sm:w-[450px] sm:max-w-[auto]">
                 <div className="p-6">
                     <SheetHeader>
                         <SheetTitle className="text-left text-2xl">

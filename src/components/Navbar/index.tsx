@@ -3,20 +3,26 @@ import { navStore } from "@/store/navBarState";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import NavItemsSheet from "./NavItemsSheet";
-import { Heart, Search, ShoppingCart, UserRound } from "lucide-react";
+import { Heart, Loader2, Search, ShoppingCart, UserRound } from "lucide-react";
 import Image from "next/image";
 import SideCart from "./SideCart";
 import Link from "next/link";
+import { useMedia } from "react-use";
+import { ClerkLoaded, ClerkLoading, useAuth, UserButton } from "@clerk/nextjs";
 
 export default function Navbar() {
+    //TODO : Make use of auth to chang the use icon
+    // TODO : close the sheet when we redirect
     // TODO : Implement a hook for screen resize
-    // TODO : 2 Buttons are using same sheet we can extract the open/close functionality and can use single sheet
     // BUG :  NavItemsSheet remains open if you open it mobile view and switch to desktop view
     // BUG : Jitter in Nav links under line, when the page changes
     const router = useRouter();
+    const user = useAuth();
 
     const { isVisible, setIsVisible } = navStore((state) => state);
+    const [cartOpen, setCartOpen] = useState(false);
     const [lastScroll, setLastScroll] = useState(-999);
+    const isMobile = useMedia("(max-width: 768px)", false);
 
     const handleNavScroll = () => {
         if (window.scrollY < lastScroll) setIsVisible(true);
@@ -39,73 +45,114 @@ export default function Navbar() {
                 !isVisible ? "-translate-y-full" : ""
             } transition-all duration-200`}
         >
-            <div className="flex w-full items-center justify-between md:w-auto md:justify-start md:space-x-5">
-                <NavItemsSheet />
-                <Link className="relative w-[70px] h-[70px]" href={"/"}>
-                    <Image
-                        fill
-                        priority
-                        src="/logo.png"
-                        alt="logo"
-                        className="hover:cursor-pointer object-cover"
+            {isMobile ? (
+                <div className="flex w-full items-center justify-between">
+                    <NavItemsSheet />
+                    <Link className="relative h-[70px] w-[70px]" href={"/"}>
+                        <Image
+                            fill
+                            priority
+                            src="/logo.png"
+                            alt="logo"
+                            className="object-cover hover:cursor-pointer"
+                        />
+                    </Link>
+                    <ShoppingCart
+                        className="cursor-pointer"
+                        color="#fff"
+                        strokeWidth={1.5}
+                        onClick={() => setCartOpen(true)}
+                        absoluteStrokeWidth
                     />
-                </Link>
-                <SideCart className="md:hidden" />
+                </div>
+            ) : (
+                <>
+                    <div className="flex w-auto justify-start space-x-5">
+                        <Link className="relative h-[70px] w-[70px]" href={"/"}>
+                            <Image
+                                fill
+                                priority
+                                src="/logo.png"
+                                alt="logo"
+                                className="object-cover hover:cursor-pointer"
+                            />
+                        </Link>
+                        <ul className="hidden items-center space-x-5 pt-2 text-white md:flex">
+                            <li className="group cursor-pointer">
+                                <Link href={"/store?q=earrings"}>
+                                    <p>Earrings</p>
+                                    <div className="h-[1px] w-0 bg-white transition-all group-hover:w-full"></div>
+                                </Link>
+                            </li>
+                            <li className="group cursor-pointer">
+                                <Link href={"/store?q=rings"}>
+                                    <p>Rings</p>
+                                    <div className="h-[1px] w-0 bg-white transition-all group-hover:w-full"></div>
+                                </Link>
+                            </li>
+                            <li className="group cursor-pointer">
+                                <Link href={"/store?q=necklace"}>
+                                    <p>Necklace</p>
+                                    <div className="h-[1px] w-0 bg-white transition-all group-hover:w-full"></div>
+                                </Link>
+                            </li>
+                            <li className="group cursor-pointer">
+                                <Link href={"/store?q=bracelets"}>
+                                    <p>Bracelets</p>
+                                    <div className="h-[1px] w-0 bg-white transition-all group-hover:w-full"></div>
+                                </Link>
+                            </li>
+                            <li className="group cursor-pointer">
+                                <Link href={"/store?q=luxe"}>
+                                    <p>Luxe</p>
+                                    <div className="h-[1px] w-0 bg-white transition-all group-hover:w-full"></div>
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+                    <div className="hidden items-center space-x-5 pt-2 text-white md:flex">
+                        <Heart
+                            className="cursor-pointer"
+                            strokeWidth={1.5}
+                            absoluteStrokeWidth
+                        />
+                        <Search
+                            className="cursor-pointer"
+                            strokeWidth={1.5}
+                            absoluteStrokeWidth
+                        />
+                        <ShoppingCart
+                            className="cursor-pointer"
+                            color="#fff"
+                            strokeWidth={1.5}
+                            absoluteStrokeWidth
+                            onClick={() => setCartOpen(true)}
+                        />
 
-                <ul className="hidden items-center space-x-5 pt-2 text-white md:flex">
-                    <li className="group cursor-pointer">
-                        <Link href={"/store?q=earrings"}>
-                            <p>Earrings</p>
-                            <div className="h-[1px] w-0 bg-white transition-all group-hover:w-full"></div>
-                        </Link>
-                    </li>
-                    <li className="group cursor-pointer">
-                        <Link href={"/store?q=rings"}>
-                            <p>Rings</p>
-                            <div className="h-[1px] w-0 bg-white transition-all group-hover:w-full"></div>
-                        </Link>
-                    </li>
-                    <li className="group cursor-pointer">
-                        <Link href={"/store?q=necklace"}>
-                            <p>Necklace</p>
-                            <div className="h-[1px] w-0 bg-white transition-all group-hover:w-full"></div>
-                        </Link>
-                    </li>
-                    <li className="group cursor-pointer">
-                        <Link href={"/store?q=bracelets"}>
-                            <p>Bracelets</p>
-                            <div className="h-[1px] w-0 bg-white transition-all group-hover:w-full"></div>
-                        </Link>
-                    </li>
-                    <li className="group cursor-pointer">
-                        <Link href={"/store?q=luxe"}>
-                            <p>Luxe</p>
-                            <div className="h-[1px] w-0 bg-white transition-all group-hover:w-full"></div>
-                        </Link>
-                    </li>
-                </ul>
-            </div>
-            <div className="hidden items-center space-x-5 pt-2 text-white md:flex">
-                <Heart
-                    className="cursor-pointer"
-                    strokeWidth={1.5}
-                    absoluteStrokeWidth
-                />
-                <Search
-                    className="cursor-pointer"
-                    strokeWidth={1.5}
-                    absoluteStrokeWidth
-                />
-                <SideCart />
-                <UserRound
-                    onClick={() => {
-                        router.push("/login");
-                    }}
-                    className="cursor-pointer"
-                    strokeWidth={1.5}
-                    absoluteStrokeWidth
-                />
-            </div>
+                        {user.userId ? (
+                            <>
+                                <ClerkLoaded>
+                                    <UserButton />
+                                </ClerkLoaded>
+                                <ClerkLoading>
+                                    <Loader2 className="animate-spin" />
+                                </ClerkLoading>
+                            </>
+                        ) : (
+                            <UserRound
+                                onClick={() => {
+                                    router.push("/sign-in");
+                                }}
+                                className="cursor-pointer"
+                                strokeWidth={1.5}
+                                absoluteStrokeWidth
+                            />
+                        )}
+                    </div>
+                </>
+            )}
+
+            <SideCart open={cartOpen} handleOpen={setCartOpen} />
         </nav>
     );
 }
