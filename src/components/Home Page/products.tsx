@@ -1,10 +1,12 @@
 import "swiper/css";
 
-import { data } from "@/dummy/data";
-
 import SwiperCarousel from "@/components/ui/SwiperCarousel";
+import { db } from "@/db/drizzle";
+import { products } from "@/db/schema";
 
-export default function Products() {
+export default async function Products() {
+    const data = await db.select().from(products);
+
     return (
         <section className="mb-40 flex flex-col items-center justify-center gap-5 px-10 sm:px-20 lg:px-40">
             <div className="flex w-full flex-col gap-5">

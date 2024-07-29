@@ -1,12 +1,27 @@
 import { relations } from "drizzle-orm";
-import { numeric, pgTable, text, primaryKey } from "drizzle-orm/pg-core";
+import {
+    pgTable,
+    text,
+    primaryKey,
+    pgEnum,
+    integer,
+} from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 
+export const categoryEnum = pgEnum("category", [
+    "earrings",
+    "rings",
+    "bracelets",
+    "luxe",
+    "necklace",
+]);
 export const products = pgTable("products", {
     ID: text("id").primaryKey(),
     title: text("title").notNull(),
     description: text("description").notNull(),
-    price: numeric("price").notNull(),
+    price: integer("price").notNull(),
+    category: categoryEnum("category").notNull(),
+    image: text("image").notNull(),
 });
 
 export const productsRelations = relations(products, ({ many }) => ({

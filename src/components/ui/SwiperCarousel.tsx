@@ -13,7 +13,7 @@ export default function SwiperCarousel({
     data: {
         title: string;
         price: number;
-        img: string;
+        image: string;
     }[];
 }) {
     const [currIndex, setCurrIndex] = useState(0);
@@ -50,10 +50,10 @@ export default function SwiperCarousel({
             {data.map((value, index) => (
                 <SwiperSlide key={index}>
                     <ProductCard
-                        className="pr-5"
+                        className="px-2"
                         title={value.title}
                         price={value.price}
-                        imgSrc={value.img}
+                        imgSrc={value.image}
                     />
                 </SwiperSlide>
             ))}
@@ -71,12 +71,12 @@ export default function SwiperCarousel({
             </div>
             {/* Custom navigation buttons */}
             <div
-                className={`arrow-prev absolute -left-full top-1/2 z-10 -translate-y-1/2 transform cursor-pointer select-none rounded-full bg-gray-800 p-3 text-white transition-all duration-300 md:group-hover:left-2`}
+                className={`arrow-prev absolute -left-full top-1/2 z-10 -translate-y-1/2 transform cursor-pointer select-none rounded-full bg-gray-800 p-3 text-white transition-all duration-300 md:group-hover:left-4`}
             >
                 <ChevronLeft />
             </div>
             <div
-                className={`arrow-next absolute -right-full top-1/2 z-10 -translate-y-1/2 transform cursor-pointer select-none rounded-full bg-gray-800 p-3 text-white duration-300 md:group-hover:right-2`}
+                className={`arrow-next absolute -right-full top-1/2 z-10 -translate-y-1/2 transform cursor-pointer select-none rounded-full bg-gray-800 p-3 text-white duration-300 md:group-hover:right-4`}
             >
                 <ChevronRight />
             </div>

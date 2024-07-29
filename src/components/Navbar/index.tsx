@@ -1,6 +1,6 @@
 "use client";
 import { navStore } from "@/store/navBarState";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import NavItemsSheet from "./NavItemsSheet";
 import { Heart, Loader2, Search, ShoppingCart, UserRound } from "lucide-react";
@@ -8,9 +8,17 @@ import Image from "next/image";
 import SideCart from "./SideCart";
 import Link from "next/link";
 import { useMedia } from "react-use";
-import { ClerkLoaded, ClerkLoading, useAuth, UserButton } from "@clerk/nextjs";
+import {
+    ClerkLoaded,
+    ClerkLoading,
+    useAuth,
+    UserButton,
+    useSession,
+} from "@clerk/nextjs";
 
 export default function Navbar() {
+    const data = useSession();
+
     //TODO : Make use of auth to chang the use icon
     // TODO : close the sheet when we redirect
     // TODO : Implement a hook for screen resize

@@ -17,6 +17,7 @@ import {
 import { ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
+import { useRouter } from "next/navigation";
 
 type ProductParams = {
     title: string;
@@ -31,35 +32,26 @@ export default function ProductCard({
     imgSrc,
     className,
 }: ProductParams) {
+    const router = useRouter();
+
     return (
         <Card
             className={cn(
                 `overflow-hidden rounded-none border-0 shadow-none`,
-                className
+                className,
             )}
         >
             <CardHeader className="p-0">
                 <ImageWithFallback
+                    onClick={() => {
+                        // FIXME : fis this so that it uses real ids rather than "something"
+                        router.push("/products/something");
+                    }}
                     src={imgSrc}
                     alt={imgSrc}
                     aspectRatio={1 / 1.2}
-                    className="overflow-hidden"
+                    className="overflow-hidden hover:cursor-pointer"
                 />
-                {/* <div className="relative aspect-[1/1.2] w-full overflow-hidden bg-gray-400">
-                    <Image
-                        src="/ring.jpg"
-                        alt="product image"
-                        fill
-                        data-loaded="false"
-                        onLoad={(event) => {
-                            event.currentTarget.setAttribute(
-                                "data-loaded",
-                                "true",
-                            );
-                        }}
-                        className="object-cover object-center data-[loaded=false]:animate-pulse data-[loaded=false]:bg-gray-100/10"
-                    />
-                </div> */}
             </CardHeader>
             <CardContent className="mt-3 flex items-start justify-between p-0">
                 <div className="flex flex-col items-start justify-between">

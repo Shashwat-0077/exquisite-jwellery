@@ -1,16 +1,22 @@
 "use client";
 import React, { useState } from "react";
-import Image from "next/image";
+import Image, { ImageProps } from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
 
-const ImageWithFallback: React.FC<{
-    src: string;
-    alt: string;
+interface ImageWithFallbackProps extends ImageProps {
     aspectRatio?: number;
     className?: string;
-}> = ({ src, alt, aspectRatio, className }) => {
+}
+
+const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
+    src,
+    alt,
+    aspectRatio,
+    className,
+    ...props
+}) => {
     const [loading, setLoading] = useState(true);
 
     return (
@@ -27,6 +33,7 @@ const ImageWithFallback: React.FC<{
                 className={`transition-opacity ${
                     loading ? "opacity-0" : "opacity-100"
                 } object-cover object-center`}
+                {...props} // Spread additional props here
             />
         </AspectRatio>
     );

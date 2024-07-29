@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import "./globals.scss";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/ui/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
@@ -18,6 +18,8 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    // [ ] : Safe guard you api endpoints (for eg : ddos)
+
     return (
         <html lang="en">
             <body className={inter.className}>
