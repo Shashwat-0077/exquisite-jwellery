@@ -11,6 +11,7 @@ const app = new Hono().basePath("/api");
 
 app.onError((err, c) => {
     if (err instanceof HTTPException) return err.getResponse();
+
     console.error(err);
     return c.json({ error: "Internal error" }, 500);
 });

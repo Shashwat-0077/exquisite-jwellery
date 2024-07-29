@@ -1,21 +1,23 @@
 "use client";
 import ProductCard from "../ui/ProductCard";
 import { client } from "@/lib/hono";
-import { filterStore } from "@/store/filters";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function ProductsSection() {
-    const { filters } = filterStore();
+    const searchParams = useSearchParams();
+    const min = searchParams.get("min");
+    const max = searchParams.get("max");
+    const categories = searchParams.get("categories");
 
-    const { data, error, isLoading, refetch } = useQuery({
-        queryKey: ["posts"],
+    const { data, error, isLoading } = useQuery({
+        queryKey: ["posts", { min, max, categories }],
         queryFn: async (args) => {
             const response = await client.api.products.$get({
                 query: {
-                    minPrice: `${filters.min}`,
-                    maxPrice: `${filters.max}`,
-                    categories: filters.categories ?? [],
+                    minPrice: min ?? undefined,
+                    maxPrice: max ?? undefined,
+                    categories: categories ?? undefined,
                 },
             });
 
@@ -25,10 +27,6 @@ export default function ProductsSection() {
             return data;
         },
     });
-
-    useEffect(() => {
-        refetch();
-    }, [filters, refetch]);
 
     // TODO : make a skeleton
     if (isLoading) return "loading...";

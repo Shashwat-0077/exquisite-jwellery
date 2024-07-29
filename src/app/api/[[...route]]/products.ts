@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { Hono } from "hono";
-import { and, eq, gte, lte } from "drizzle-orm";
+import { and, eq, gte, inArray, lte, sql } from "drizzle-orm";
 import { db } from "@/db/drizzle";
 import { v4 as uuidv4 } from "uuid";
-import { products } from "@/db/schema";
+import { products, categories } from "@/db/schema";
 import { ProductsSchema } from "@/db/schema";
 import { zValidator } from "@hono/zod-validator";
 import { clerkMiddleware } from "@hono/clerk-auth";
@@ -24,22 +24,75 @@ const app = new Hono<{ Variables: variables }>()
         zValidator(
             "query",
             z.object({
-                minPrice: z.string().transform((val) => parseInt(val)),
-                maxPrice: z.string().transform((val) => parseInt(val)),
-                categories: z.string().array().optional(),
+                minPrice: z
+                    .string()
+                    .transform((val) => parseInt(val))
+                    .optional(),
+                maxPrice: z
+                    .string()
+                    .transform((val) => parseInt(val))
+                    .optional(),
+                categories: z
+                    .string()
+                    .transform((val) => JSON.parse(val) as string[])
+                    .optional(),
             }),
         ),
         async (c) => {
-            const { minPrice, maxPrice, categories } = c.req.valid("query");
-            console.log({ maxPrice, type: typeof maxPrice });
+            const {
+                minPrice: filterMinPrice,
+                maxPrice: filterMaxPrice,
+                categories: filterCategories,
+            } = c.req.valid("query");
+
+            // Combine the queries for minPrice, maxPrice, and categories
+            const [maxPriceResult, minPriceResult, categoriesResult] =
+                await Promise.all([
+                    !filterMaxPrice
+                        ? db
+                              .select({
+                                  value: sql<number>`MAX(${products.price})`,
+                              })
+                              .from(products)
+                        : Promise.resolve([{ value: NaN }]),
+                    !filterMinPrice
+                        ? db
+                              .select({
+                                  value: sql<number>`MIN(${products.price})`,
+                              })
+                              .from(products)
+                        : Promise.resolve([{ value: NaN }]),
+                    !filterCategories || filterCategories.length === 0
+                        ? db.select({ name: categories.name }).from(categories)
+                        : Promise.resolve([]),
+                ]);
+
+            const maxPrice = filterMaxPrice ?? maxPriceResult[0].value;
+            const minPrice = filterMinPrice ?? minPriceResult[0].value;
+            const cats =
+                filterCategories && filterCategories.length > 0
+                    ? filterCategories
+                    : categoriesResult.map((val) => val.name);
+
+            console.log({ maxPrice, minPrice, cats });
+            console.log({ filterMaxPrice, filterMinPrice, filterCategories });
 
             const data = await db
-                .select()
+                .select({
+                    ID: products.ID,
+                    title: products.title,
+                    description: products.description,
+                    image: products.image,
+                    price: products.price,
+                    categoryName: categories.name,
+                })
                 .from(products)
+                .innerJoin(categories, eq(products.category, categories.id))
                 .where(
                     and(
                         gte(products.price, minPrice),
                         lte(products.price, maxPrice),
+                        inArray(categories.name, cats),
                     ),
                 );
 

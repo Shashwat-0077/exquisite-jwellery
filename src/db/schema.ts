@@ -5,27 +5,28 @@ import {
     primaryKey,
     pgEnum,
     integer,
+    serial,
+    numeric,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 
-export const categoryEnum = pgEnum("category", [
-    "earrings",
-    "rings",
-    "bracelets",
-    "luxe",
-    "necklace",
-]);
+export const categories = pgTable("categories", {
+    id: serial("id").primaryKey(),
+    name: text("name").notNull(),
+});
+
 export const products = pgTable("products", {
     ID: text("id").primaryKey(),
     title: text("title").notNull(),
     description: text("description").notNull(),
     price: integer("price").notNull(),
-    category: categoryEnum("category").notNull(),
     image: text("image").notNull(),
+    category: integer("category").references(() => categories.id),
 });
 
-export const productsRelations = relations(products, ({ many }) => ({
+export const productsRelations = relations(products, ({ one, many }) => ({
     ordersToProducts: many(ordersToProducts),
+    categories: one(categories),
 }));
 
 export const ProductsSchema = createInsertSchema(products);

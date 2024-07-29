@@ -1,12 +1,12 @@
 "use client";
 import { Label } from "@radix-ui/react-label";
-import { filterStore } from "@/store/filters";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { Checkbox } from "../ui/checkbox";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "../ui/button";
 import * as Slider from "@radix-ui/react-slider";
 import { Input } from "../ui/input";
+import { usePathname, useRouter } from "next/navigation";
 
 const moreFilters = ["Rings", "Earrings", "Necklace", "Bracelets", "Luxe"];
 const MIN = 100;
@@ -14,9 +14,10 @@ const MAX = 1500;
 
 export default function Filters() {
     // TODO : Make the the filter sheet, and make it responsive, item will be visible when screen is big, and hidden when screen is small
-    const { setFilters } = filterStore();
 
     const [localCategories, setLocalCategories] = useState<string[]>([]);
+    const router = useRouter();
+    const pathname = usePathname();
 
     // here the size of the array will always be 2 and first item will always be min and second item will always be max
     const [localMinmax, setLocalMinmax] = useState<[number, number]>([
@@ -26,6 +27,7 @@ export default function Filters() {
 
     // Checkboxes
     const handleCheckboxChange = (checked: CheckedState, value: string) => {
+        value = value.toLowerCase();
         if (checked) {
             setLocalCategories([...localCategories, value]);
         } else {
@@ -41,12 +43,12 @@ export default function Filters() {
     };
 
     // Apply Changes
-    const handleApplyFilters = () => {
-        setFilters({
-            minVal: localMinmax[0],
-            maxVal: localMinmax[1],
-            categoriesVal: localCategories,
-        });
+    const addQueryParam = () => {
+        const params = new URLSearchParams();
+        params.set("min", String(localMinmax[0]));
+        params.set("max", String(localMinmax[1]));
+        params.set("categories", JSON.stringify(localCategories));
+        router.push(`${pathname}?${params.toString()}`);
     };
 
     return (
@@ -132,7 +134,7 @@ export default function Filters() {
                     ))}
                 </ul>
             </div>
-            <Button onClick={handleApplyFilters}>Apply</Button>
+            <Button onClick={addQueryParam}>Apply</Button>
         </div>
     );
     {

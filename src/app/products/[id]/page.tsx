@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import QuantityCounter from "@/components/ui/QuantityCounter";
 import SwiperCarousel from "@/components/ui/SwiperCarousel";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { data } from "@/dummy/data";
 
 export default function ProductPage() {
     return (
@@ -131,13 +130,13 @@ export default function ProductPage() {
                     <h1 className="w-full text-left text-4xl font-bold">
                         You Might Also Like
                     </h1>
-                    <SwiperCarousel data={data} />
+                    {/* <SwiperCarousel data={data} /> */}
                 </div>
                 <div className="flex w-full flex-col gap-5">
                     <h1 className="w-full text-left text-4xl font-bold">
                         Recently Viewed
                     </h1>
-                    <SwiperCarousel data={data} />
+                    {/* <SwiperCarousel data={data} /> */}
                 </div>
             </section>
         </div>
