@@ -9,9 +9,8 @@ import { zValidator } from "@hono/zod-validator";
 import { clerkMiddleware } from "@hono/clerk-auth";
 import { authMiddleWare } from "./utils/authMiddleware";
 import { adminMiddleware } from "./utils/adminMiddleware";
+import { GetBulkSchema, GetByQuerySchema } from "./schema/products";
 
-//TODO : check is their any to abstract the functionality if user is signed in
-// TODO : check if the user is admin or not for all routes
 // TODO : Enable auth after testing for all routes
 
 type variables = {
@@ -19,86 +18,76 @@ type variables = {
 };
 
 const app = new Hono<{ Variables: variables }>()
-    .get(
-        "/",
-        zValidator(
-            "query",
-            z.object({
-                minPrice: z
-                    .string()
-                    .transform((val) => parseInt(val))
-                    .optional(),
-                maxPrice: z
-                    .string()
-                    .transform((val) => parseInt(val))
-                    .optional(),
-                categories: z
-                    .string()
-                    .transform((val) => JSON.parse(val) as string[])
-                    .optional(),
-            }),
-        ),
-        async (c) => {
-            const {
-                minPrice: filterMinPrice,
-                maxPrice: filterMaxPrice,
-                categories: filterCategories,
-            } = c.req.valid("query");
+    //  Get by query
+    .get("/", zValidator("query", GetByQuerySchema), async (c) => {
+        const {
+            minPrice: filterMinPrice,
+            maxPrice: filterMaxPrice,
+            categories: filterCategories,
+        } = c.req.valid("query");
 
-            // Combine the queries for minPrice, maxPrice, and categories
-            const [maxPriceResult, minPriceResult, categoriesResult] =
-                await Promise.all([
-                    !filterMaxPrice
-                        ? db
-                              .select({
-                                  value: sql<number>`MAX(${products.price})`,
-                              })
-                              .from(products)
-                        : Promise.resolve([{ value: NaN }]),
-                    !filterMinPrice
-                        ? db
-                              .select({
-                                  value: sql<number>`MIN(${products.price})`,
-                              })
-                              .from(products)
-                        : Promise.resolve([{ value: NaN }]),
-                    !filterCategories || filterCategories.length === 0
-                        ? db.select({ name: categories.name }).from(categories)
-                        : Promise.resolve([]),
-                ]);
+        // Combine the queries for minPrice, maxPrice, and categories
+        const [maxPriceResult, minPriceResult, categoriesResult] =
+            await Promise.all([
+                !filterMaxPrice
+                    ? db
+                          .select({
+                              value: sql<number>`MAX(${products.price})`,
+                          })
+                          .from(products)
+                    : Promise.resolve([{ value: NaN }]),
+                !filterMinPrice
+                    ? db
+                          .select({
+                              value: sql<number>`MIN(${products.price})`,
+                          })
+                          .from(products)
+                    : Promise.resolve([{ value: NaN }]),
+                !filterCategories || filterCategories.length === 0
+                    ? db.select({ name: categories.name }).from(categories)
+                    : Promise.resolve([]),
+            ]);
 
-            const maxPrice = filterMaxPrice ?? maxPriceResult[0].value;
-            const minPrice = filterMinPrice ?? minPriceResult[0].value;
-            const cats =
-                filterCategories && filterCategories.length > 0
-                    ? filterCategories
-                    : categoriesResult.map((val) => val.name);
+        const maxPrice = filterMaxPrice ?? maxPriceResult[0].value;
+        const minPrice = filterMinPrice ?? minPriceResult[0].value;
+        const cats =
+            filterCategories && filterCategories.length > 0
+                ? filterCategories
+                : categoriesResult.map((val) => val.name);
 
-            console.log({ maxPrice, minPrice, cats });
-            console.log({ filterMaxPrice, filterMinPrice, filterCategories });
+        const data = await db
+            .select({
+                ID: products.ID,
+                title: products.title,
+                description: products.description,
+                image: products.image,
+                price: products.price,
+                categoryName: categories.name,
+            })
+            .from(products)
+            .innerJoin(categories, eq(products.category, categories.id))
+            .where(
+                and(
+                    gte(products.price, minPrice),
+                    lte(products.price, maxPrice),
+                    inArray(categories.name, cats),
+                ),
+            );
 
-            const data = await db
-                .select({
-                    ID: products.ID,
-                    title: products.title,
-                    description: products.description,
-                    image: products.image,
-                    price: products.price,
-                    categoryName: categories.name,
-                })
-                .from(products)
-                .innerJoin(categories, eq(products.category, categories.id))
-                .where(
-                    and(
-                        gte(products.price, minPrice),
-                        lte(products.price, maxPrice),
-                        inArray(categories.name, cats),
-                    ),
-                );
+        return c.json({ data });
+    })
+    // Get bulk by id
+    .get("/bulk", zValidator("query", GetBulkSchema), async (c) => {
+        const { ids } = c.req.valid("query");
 
-            return c.json({ data });
-        },
-    )
+        const data = await db
+            .select()
+            .from(products)
+            .where(inArray(products.ID, ids));
+
+        return c.json({ data });
+    })
+    // Get by id
     .get(
         "/:id",
         zValidator("param", z.object({ id: z.string() })),

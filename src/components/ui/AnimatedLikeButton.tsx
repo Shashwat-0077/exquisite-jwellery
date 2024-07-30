@@ -1,18 +1,46 @@
 "use client";
-import React, { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { useLocalStorage } from "react-use";
 
 type ParamsTypes = {
     width: number;
     height: number;
+    productID: string;
     parentOnclick?: () => void;
 };
 
 export default function AnimatedLikeButton({
     width,
     height,
+    productID,
     parentOnclick,
 }: ParamsTypes) {
-    const [isChecked, setIsChecked] = useState(false);
+    const queryClient = useQueryClient();
+    const [products, setProducts] = useLocalStorage<Array<string>>(
+        "products",
+        [],
+    );
+    const [isChecked, setIsChecked] = useState(
+        products?.includes(productID) ? true : false,
+    );
+
+    const handleOnClick = (
+        e: React.MouseEvent<HTMLInputElement, MouseEvent>,
+    ) => {
+        e.preventDefault();
+        if (!isChecked) {
+            setProducts([...(products || []), productID]);
+        } else {
+            const newProducts = products?.filter((prod) => prod !== productID);
+            setProducts(newProducts);
+        }
+        queryClient.invalidateQueries({ queryKey: ["wishlist"] });
+        console.log(JSON.parse(localStorage.products));
+        setIsChecked(!isChecked);
+
+        if (parentOnclick) parentOnclick();
+    };
 
     return (
         <div
@@ -25,12 +53,7 @@ export default function AnimatedLikeButton({
             <input
                 type="checkbox"
                 className="absolute left-0 top-0 z-20 h-full w-full cursor-pointer opacity-0"
-                onClick={(e) => {
-                    e.preventDefault();
-                    setIsChecked(!isChecked);
-
-                    if (parentOnclick) parentOnclick();
-                }}
+                onClick={handleOnClick}
             />
             <div className="flex h-full w-full items-center justify-center">
                 <svg

@@ -14,6 +14,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import consola from "consola";
 
 const RegisterSchema = z.object({
     name: z.string({ message: "Name is required" }),
@@ -38,7 +39,7 @@ export default function Register() {
     });
 
     function onSubmit(data: z.infer<typeof RegisterSchema>) {
-        console.log(data);
+        consola.log(data);
     }
 
     return (

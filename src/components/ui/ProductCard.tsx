@@ -23,6 +23,7 @@ type ProductParams = {
     title: string;
     price: number;
     imgSrc: string;
+    id: string;
     className?: string;
 };
 
@@ -30,6 +31,7 @@ export default function ProductCard({
     title,
     price,
     imgSrc,
+    id,
     className,
 }: ProductParams) {
     const router = useRouter();
@@ -43,9 +45,9 @@ export default function ProductCard({
         >
             <CardHeader className="p-0">
                 <ImageWithFallback
+                    key={"image" + id}
                     onClick={() => {
-                        // FIXME : fis this so that it uses real ids rather than "something"
-                        router.push("/products/something");
+                        router.push(`/products/${id}`);
                     }}
                     src={imgSrc}
                     alt={imgSrc}
@@ -67,10 +69,12 @@ export default function ProductCard({
                         <Tooltip>
                             <TooltipTrigger>
                                 <LikeButton
+                                    key={"like" + id}
                                     width={25}
                                     height={25}
+                                    productID={id}
                                     parentOnclick={() => {
-                                        console.log("hello");
+                                        // consola.info(id);
                                     }}
                                 />
                             </TooltipTrigger>

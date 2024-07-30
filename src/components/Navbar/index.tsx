@@ -22,8 +22,6 @@ export default function Navbar() {
     //TODO : Make use of auth to chang the use icon
     // TODO : close the sheet when we redirect
     // TODO : Implement a hook for screen resize
-    // BUG :  NavItemsSheet remains open if you open it mobile view and switch to desktop view
-    // BUG : Jitter in Nav links under line, when the page changes
     const router = useRouter();
     const user = useAuth();
 
@@ -33,6 +31,10 @@ export default function Navbar() {
     const isMobile = useMedia("(max-width: 768px)", false);
 
     const handleNavScroll = () => {
+        if (window.scrollY < 80) {
+            setIsVisible(true);
+            return;
+        }
         if (window.scrollY < lastScroll) setIsVisible(true);
         else setIsVisible(false);
 
@@ -87,31 +89,41 @@ export default function Navbar() {
                         </Link>
                         <ul className="hidden items-center space-x-5 pt-2 text-white md:flex">
                             <li className="group cursor-pointer">
-                                <Link href={"/store?q=earrings"}>
+                                <Link
+                                    href={`/products?categories=%5B"earrings"%5D`}
+                                >
                                     <p>Earrings</p>
                                     <div className="h-[1px] w-0 bg-white transition-all group-hover:w-full"></div>
                                 </Link>
                             </li>
                             <li className="group cursor-pointer">
-                                <Link href={"/store?q=rings"}>
+                                <Link
+                                    href={`/products?categories=%5B"rings"%5D`}
+                                >
                                     <p>Rings</p>
                                     <div className="h-[1px] w-0 bg-white transition-all group-hover:w-full"></div>
                                 </Link>
                             </li>
                             <li className="group cursor-pointer">
-                                <Link href={"/store?q=necklace"}>
+                                <Link
+                                    href={`/products?categories=%5B"necklace"%5D`}
+                                >
                                     <p>Necklace</p>
                                     <div className="h-[1px] w-0 bg-white transition-all group-hover:w-full"></div>
                                 </Link>
                             </li>
                             <li className="group cursor-pointer">
-                                <Link href={"/store?q=bracelets"}>
+                                <Link
+                                    href={`/products?categories=%5B"bracelets"%5D`}
+                                >
                                     <p>Bracelets</p>
                                     <div className="h-[1px] w-0 bg-white transition-all group-hover:w-full"></div>
                                 </Link>
                             </li>
                             <li className="group cursor-pointer">
-                                <Link href={"/store?q=luxe"}>
+                                <Link
+                                    href={`/products?categories=%5B"luxe"%5D`}
+                                >
                                     <p>Luxe</p>
                                     <div className="h-[1px] w-0 bg-white transition-all group-hover:w-full"></div>
                                 </Link>
@@ -123,6 +135,9 @@ export default function Navbar() {
                             className="cursor-pointer"
                             strokeWidth={1.5}
                             absoluteStrokeWidth
+                            onClick={() => {
+                                router.push("/wishlist");
+                            }}
                         />
                         <Search
                             className="cursor-pointer"

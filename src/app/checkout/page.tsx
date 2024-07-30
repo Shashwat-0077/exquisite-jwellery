@@ -20,8 +20,8 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { data } from "@/dummy/data";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
+import consola from "consola";
 
 const CheckoutSchema = z.object({
     email: z
@@ -91,8 +91,8 @@ export default function Checkout() {
     });
 
     function onSubmit(data: z.infer<typeof CheckoutSchema>) {
-        console.log("hello");
-        console.log(data);
+        consola.log("hello");
+        consola.log(data);
     }
 
     return (
@@ -330,7 +330,7 @@ export default function Checkout() {
             </div>
             <div className="w-full rounded-xl bg-gray-100 px-10 py-7">
                 <section className="flex flex-col gap-3">
-                    {data.slice(0, 3).map((product, index) => (
+                    {/* {data.slice(0, 3).map((product, index) => (
                         <div
                             key={index}
                             className="grid w-full grid-cols-[1fr_1fr_3fr] items-center gap-3"
@@ -344,7 +344,7 @@ export default function Checkout() {
                             <p>{product.title}</p>
                             <p className="justify-self-end">{product.price}</p>
                         </div>
-                    ))}
+                    ))} */}
                 </section>
                 <section className="mt-6 flex items-center gap-3">
                     <Input

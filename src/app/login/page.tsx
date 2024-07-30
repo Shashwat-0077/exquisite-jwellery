@@ -14,6 +14,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import consola from "consola";
 
 const LoginSchema = z.object({
     email: z.string({ message: "Email is required" }).email(),
@@ -32,7 +33,7 @@ export default function Login() {
     });
 
     function onSubmit(data: z.infer<typeof LoginSchema>) {
-        console.log(data);
+        consola.log(data);
     }
 
     return (

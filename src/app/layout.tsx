@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/ui/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
 import { QueryProvider } from "@/providers/queryProvider";
-
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -28,6 +28,7 @@ export default function RootLayout({
                         <Navbar />
                         {children}
                         <Footer />
+                        <ReactQueryDevtools initialIsOpen={false} />
                     </QueryProvider>
                 </ClerkProvider>
             </body>

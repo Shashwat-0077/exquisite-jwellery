@@ -9,11 +9,15 @@ import { Input } from "../ui/input";
 import { usePathname, useRouter } from "next/navigation";
 
 const moreFilters = ["Rings", "Earrings", "Necklace", "Bracelets", "Luxe"];
+
+// TODO : fetch these values from the server
 const MIN = 100;
 const MAX = 1500;
 
 export default function Filters() {
     // TODO : Make the the filter sheet, and make it responsive, item will be visible when screen is big, and hidden when screen is small
+
+    // TODO : make it so that if the user enter params in the url it changes in this UI also
 
     const [localCategories, setLocalCategories] = useState<string[]>([]);
     const router = useRouter();

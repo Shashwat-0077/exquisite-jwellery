@@ -1,36 +1,45 @@
 "use client";
-import ProductCard from "../ui/ProductCard";
-import { client } from "@/lib/hono";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
+import ProductCard from "../ui/ProductCard";
+import { client } from "@/lib/hono";
+import { useEffect } from "react";
+import { navStore } from "@/store/navBarState";
 
 export default function ProductsSection() {
+    const { setIsVisible } = navStore();
     const searchParams = useSearchParams();
-    const min = searchParams.get("min");
-    const max = searchParams.get("max");
-    const categories = searchParams.get("categories");
+    const filterMin = searchParams.get("min");
+    const filterMax = searchParams.get("max");
+    const filterCategories = searchParams.get("categories");
 
-    const { data, error, isLoading } = useQuery({
-        queryKey: ["posts", { min, max, categories }],
-        queryFn: async (args) => {
+    const { data, isLoading, error } = useQuery({
+        queryKey: [
+            "products",
+            {
+                min: filterMin || "",
+                max: filterMax || "",
+                categories: filterCategories || [],
+            },
+        ],
+        queryFn: async () => {
             const response = await client.api.products.$get({
                 query: {
-                    minPrice: min ?? undefined,
-                    maxPrice: max ?? undefined,
-                    categories: categories ?? undefined,
+                    minPrice: filterMin ?? undefined,
+                    maxPrice: filterMax ?? undefined,
+                    categories: filterCategories ?? undefined,
                 },
             });
 
-            if (!response.ok) throw new Error("Failed to fetch accounts");
+            if (!response.ok) throw new Error("Failed to fetch products");
 
             const { data } = await response.json();
+            console.log("Client fetched data:", data); // Debugging log
             return data;
         },
     });
 
-    // TODO : make a skeleton
     if (isLoading) return "loading...";
-    // TODO : handle error
     if (error) return <p>{JSON.stringify(error)}</p>;
 
     return (
@@ -41,6 +50,7 @@ export default function ProductsSection() {
                     title={product.title}
                     price={product.price}
                     imgSrc={product.image}
+                    id={product.ID}
                 />
             ))}
         </div>
