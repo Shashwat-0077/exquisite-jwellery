@@ -7,7 +7,13 @@ import ImageWithFallback from "../ui/ImageWithFallback";
 
 const IMAGES = ["earrings", "ring", "necklace", "bracelet", "luxe"];
 
-export default function HeroCarousel({ className }: { className?: string }) {
+export default function HeroCarousel({
+    className,
+    image,
+}: {
+    className?: string;
+    image: string;
+}) {
     const { isVisible } = navStore((state) => state);
 
     // TODO : Implement thumbs init

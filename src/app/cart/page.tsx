@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { CircleHelp } from "lucide-react";
-import Image from "next/image";
 
 export default function Cart() {
     // TODO : Add a Dialogue box for the Shipping charges help/QuestionMark button

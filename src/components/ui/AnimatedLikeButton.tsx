@@ -1,7 +1,6 @@
 "use client";
-import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useLocalStorage } from "react-use";
+import { useWishlistStore } from "@/store/wishlist";
 
 type ParamsTypes = {
     width: number;
@@ -10,37 +9,31 @@ type ParamsTypes = {
     parentOnclick?: () => void;
 };
 
+// BUG : Animation triggers on reload, it should not 🙂🙂
+
 export default function AnimatedLikeButton({
     width,
     height,
     productID,
     parentOnclick,
 }: ParamsTypes) {
-    const queryClient = useQueryClient();
-    const [products, setProducts] = useLocalStorage<Array<string>>(
-        "products",
-        [],
-    );
+    const { wishlistIds, addWishlistId, removeWishlistId } = useWishlistStore();
+
     const [isChecked, setIsChecked] = useState(
-        products?.includes(productID) ? true : false,
+        wishlistIds?.includes(productID) ? true : false,
     );
 
-    const handleOnClick = (
-        e: React.MouseEvent<HTMLInputElement, MouseEvent>,
-    ) => {
+    function handleOnClick(e: React.MouseEvent<HTMLInputElement, MouseEvent>) {
         e.preventDefault();
         if (!isChecked) {
-            setProducts([...(products || []), productID]);
+            addWishlistId(productID);
         } else {
-            const newProducts = products?.filter((prod) => prod !== productID);
-            setProducts(newProducts);
+            removeWishlistId(productID);
         }
-        queryClient.invalidateQueries({ queryKey: ["wishlist"] });
-        console.log(JSON.parse(localStorage.products));
         setIsChecked(!isChecked);
 
         if (parentOnclick) parentOnclick();
-    };
+    }
 
     return (
         <div

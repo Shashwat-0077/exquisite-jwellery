@@ -1,37 +1,47 @@
+import AddToCart from "@/components/Product Page/AddToCart";
 import HeroCarousel from "@/components/Product Page/HeroCarousel";
 import { Button } from "@/components/ui/button";
 import QuantityCounter from "@/components/ui/QuantityCounter";
-import SwiperCarousel from "@/components/ui/SwiperCarousel";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { db } from "@/db/drizzle";
+import { products } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
-export default function ProductPage() {
+export default async function ProductPage({
+    params,
+}: {
+    params: { id: string };
+}) {
+    const { id } = params;
+    const [product] = await db
+        .select()
+        .from(products)
+        .where(eq(products.ID, id));
+
     return (
         <div className="container min-h-[calc(100svh-80px)]">
             <div className="relative mx-auto flex w-full max-w-[1000px] flex-col items-start justify-start pt-3 md:flex-row md:gap-7">
-                <HeroCarousel />
+                <HeroCarousel image={product.image} />
                 <section id="product-details" className="flex w-full flex-col">
                     <section id="product-info">
                         <h1 className="mb-5 text-2xl font-bold">
-                            Product Name
+                            {product.title}
                         </h1>
-                        <p>
-                            Product description Lorem ipsum, dolor sit amet
-                            consectetur adipisicing elit. Delectus, recusandae.
-                        </p>
+                        <p>&#8377;{product.price}</p>
+                        <p>{product.description}</p>
                     </section>
                     <section
                         id="product-actions"
                         className="mt-7 grid gap-x-5 gap-y-5 md:grid-cols-[30%_70%]"
                     >
-                        <QuantityCounter className="w-full" />
-                        <Button
-                            variant={"outline"}
-                            className="mt-0 block h-full w-full border-black"
-                        >
-                            Buy Now
-                        </Button>
+                        <AddToCart
+                            prodID={product.ID}
+                            prodPrice={product.price}
+                            prodImage={product.image}
+                            prodTitle={product.title}
+                        />
                         <Button className="block h-12 w-full md:col-span-2">
-                            Add to cart
+                            Buy Now
                         </Button>
                     </section>
                     <section id="product-details" className="mt-7">

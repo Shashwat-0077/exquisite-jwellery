@@ -15,13 +15,14 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
     alt,
     aspectRatio,
     className,
+
     ...props
 }) => {
     const [loading, setLoading] = useState(true);
 
     return (
         <AspectRatio
-            className={cn("relative w-full", className)}
+            className={cn("relative w-full overflow-hidden", className)}
             ratio={aspectRatio}
         >
             {loading && <Skeleton className="h-full w-full" />}

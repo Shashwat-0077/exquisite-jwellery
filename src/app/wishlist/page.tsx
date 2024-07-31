@@ -1,28 +1,24 @@
 "use client";
 import ProductCard from "@/components/ui/ProductCard";
 import { client } from "@/lib/hono";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useLocalStorage } from "react-use";
-import type { InferRequestType, InferResponseType } from "hono/client";
-import { useEffect } from "react";
-
-type ResType = InferResponseType<typeof client.api.products.bulk.$get>;
+import { useQuery } from "@tanstack/react-query";
+import { useWishlistStore } from "@/store/wishlist";
 
 export default function Wishlist() {
-    const [products] = useLocalStorage<string[]>("products", []);
+    const { wishlistIds } = useWishlistStore();
+    console.log(wishlistIds);
 
     const { data, isLoading } = useQuery({
-        queryKey: ["wishlist"],
-        queryFn: async (args) => {
-            if (!products || products.length === 0) return;
+        queryKey: ["wishlist", wishlistIds],
+        queryFn: async () => {
+            if (wishlistIds.length === 0) return [];
 
             const response = await client.api.products.bulk.$get({
                 query: {
-                    ids: JSON.stringify(products),
+                    ids: JSON.stringify(wishlistIds),
                 },
             });
 
-            console.log(products);
             if (!response.ok) throw new Error("Failed to fetch products");
             const { data } = await response.json();
 
@@ -32,6 +28,8 @@ export default function Wishlist() {
     });
 
     if (isLoading) return "Loading...";
+
+    // Bug : While interacting with the like button , when the use removes the product from the wishlist the page ui gets distorted, fix that
 
     return (
         <div className="mt-10 flex min-h-[calc(100svh-80px)] flex-col justify-center">

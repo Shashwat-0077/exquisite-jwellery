@@ -26,6 +26,8 @@ const app = new Hono<{ Variables: variables }>()
             categories: filterCategories,
         } = c.req.valid("query");
 
+        console.log("Query Received !!!");
+
         // Combine the queries for minPrice, maxPrice, and categories
         const [maxPriceResult, minPriceResult, categoriesResult] =
             await Promise.all([
@@ -74,6 +76,7 @@ const app = new Hono<{ Variables: variables }>()
                 ),
             );
 
+        console.log(data);
         return c.json({ data });
     })
     // Get bulk by id

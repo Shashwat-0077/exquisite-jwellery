@@ -91,7 +91,6 @@ export default async function Store({
                         inArray(categories.name, cats),
                     ),
                 );
-
             // console.log(data); // Debugging log
             return data;
         },

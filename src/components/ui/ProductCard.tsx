@@ -18,6 +18,8 @@ import { ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { useRouter } from "next/navigation";
+import useCartStore from "@/store/cartStore";
+import { useQueryClient } from "@tanstack/react-query";
 
 type ProductParams = {
     title: string;
@@ -35,6 +37,8 @@ export default function ProductCard({
     className,
 }: ProductParams) {
     const router = useRouter();
+    const queryClient = useQueryClient();
+    const { addItemToCart } = useCartStore();
 
     return (
         <Card
@@ -84,7 +88,15 @@ export default function ProductCard({
                         </Tooltip>
                         <Tooltip>
                             <TooltipTrigger>
-                                <ShoppingCart />
+                                <ShoppingCart
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        addItemToCart(id, price, 1);
+                                        queryClient.invalidateQueries({
+                                            queryKey: ["cart-items"],
+                                        });
+                                    }}
+                                />
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>Add to Cart</p>

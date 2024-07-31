@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import ProductCard from "../ui/ProductCard";
 import { client } from "@/lib/hono";
-import { useEffect } from "react";
 import { navStore } from "@/store/navBarState";
 
 export default function ProductsSection() {
