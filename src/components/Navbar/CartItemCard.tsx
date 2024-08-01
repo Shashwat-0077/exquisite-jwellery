@@ -1,11 +1,8 @@
 "use client";
-import { client } from "@/lib/hono";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useCartStore from "@/store/cartStore";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ImageWithFallback from "../ui/ImageWithFallback";
 import QuantityCounter from "../ui/QuantityCounter";
-import { ScrollArea } from "../ui/scroll-area";
 import { Trash2 } from "lucide-react";
 
 type PropType = {
@@ -28,10 +25,14 @@ export default function CartItemCard({
         removeItemFromCart,
         increaseItemQuantity,
         decreaseItemQuantity,
+        getItemQuantity,
     } = useCartStore();
-    const queryClient = useQueryClient();
 
     const [prodCount, setProdCount] = useState(prodQuant);
+
+    useEffect(() => {
+        setProdCount(getItemQuantity(prodID));
+    }, [cartItems, prodID, getItemQuantity]);
 
     return (
         <React.Fragment>
@@ -51,9 +52,6 @@ export default function CartItemCard({
                         className="cursor-pointer"
                         onClick={() => {
                             removeItemFromCart(prodID);
-                            queryClient.invalidateQueries({
-                                queryKey: ["cart-items"],
-                            });
                         }}
                     />
                 </div>

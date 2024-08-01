@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     Card,
     CardContent,
@@ -14,12 +14,13 @@ import {
     TooltipTrigger,
     TooltipContent,
 } from "@/components/ui/tooltip";
-import { ShoppingCart } from "lucide-react";
+import { Check, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { useRouter } from "next/navigation";
 import useCartStore from "@/store/cartStore";
 import { useQueryClient } from "@tanstack/react-query";
+import consola from "consola";
 
 type ProductParams = {
     title: string;
@@ -39,6 +40,25 @@ export default function ProductCard({
     const router = useRouter();
     const queryClient = useQueryClient();
     const { addItemToCart } = useCartStore();
+    const [clicked, setClicked] = useState(false);
+
+    const handleAddToCartClick = (
+        e: React.MouseEvent<SVGSVGElement, MouseEvent>,
+    ) => {
+        e.preventDefault();
+        addItemToCart(id, price, 1, imgSrc, title);
+        queryClient.invalidateQueries({ queryKey: ["cart-items"] });
+        setClicked(true);
+    };
+
+    useEffect(() => {
+        if (clicked) {
+            const timer = setTimeout(() => {
+                setClicked(false);
+            }, 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [clicked]);
 
     return (
         <Card
@@ -68,6 +88,7 @@ export default function ProductCard({
                         &#8377;{price}
                     </CardDescription>
                 </div>
+
                 <div className="flex gap-3">
                     <TooltipProvider>
                         <Tooltip>
@@ -88,15 +109,13 @@ export default function ProductCard({
                         </Tooltip>
                         <Tooltip>
                             <TooltipTrigger>
-                                <ShoppingCart
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        addItemToCart(id, price, 1);
-                                        queryClient.invalidateQueries({
-                                            queryKey: ["cart-items"],
-                                        });
-                                    }}
-                                />
+                                {clicked ? (
+                                    <Check />
+                                ) : (
+                                    <ShoppingCart
+                                        onClick={handleAddToCartClick}
+                                    />
+                                )}
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>Add to Cart</p>

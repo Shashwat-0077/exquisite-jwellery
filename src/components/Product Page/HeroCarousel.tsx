@@ -9,10 +9,10 @@ const IMAGES = ["earrings", "ring", "necklace", "bracelet", "luxe"];
 
 export default function HeroCarousel({
     className,
-    image,
+    images,
 }: {
     className?: string;
-    image: string;
+    images: string[];
 }) {
     const { isVisible } = navStore((state) => state);
 
@@ -26,10 +26,10 @@ export default function HeroCarousel({
                 isVisible ? "md:top-[90px]" : "md:top-[10px]"
             } h-auto w-full max-w-[500px] select-none rounded-lg transition-all duration-200`}
         >
-            {IMAGES.map((img, index) => (
+            {images.map((img, index) => (
                 <SwiperSlide key={index}>
                     <ImageWithFallback
-                        src={`/${img}.jpg`}
+                        src={img}
                         alt={img}
                         aspectRatio={1 / 1}
                     />

@@ -2,12 +2,13 @@
 import { Label } from "@radix-ui/react-label";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { Checkbox } from "../ui/checkbox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import * as Slider from "@radix-ui/react-slider";
 import { Input } from "../ui/input";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+// fetch it from server
 const moreFilters = ["Rings", "Earrings", "Necklace", "Bracelets", "Luxe"];
 
 // TODO : fetch these values from the server
@@ -19,9 +20,27 @@ export default function Filters() {
 
     // TODO : make it so that if the user enter params in the url it changes in this UI also
 
-    const [localCategories, setLocalCategories] = useState<string[]>([]);
     const router = useRouter();
     const pathname = usePathname();
+
+    const searchParams = useSearchParams();
+    const [localCategories, setLocalCategories] = useState<string[]>([]);
+
+    useEffect(() => {
+        const items = JSON.parse(searchParams.get("categories") || "[]");
+        try {
+            setLocalCategories((prevArray) => {
+                if (prevArray !== items) return items;
+                return prevArray;
+            });
+        } catch {
+            setLocalCategories([]);
+        }
+    }, [searchParams]);
+
+    useEffect(() => {
+        console.log(localCategories);
+    }, [localCategories]);
 
     // here the size of the array will always be 2 and first item will always be min and second item will always be max
     const [localMinmax, setLocalMinmax] = useState<[number, number]>([
@@ -132,6 +151,9 @@ export default function Filters() {
                                 onCheckedChange={(checked) => {
                                     handleCheckboxChange(checked, value);
                                 }}
+                                checked={localCategories.includes(
+                                    value.toLowerCase(),
+                                )}
                             />
                             <Label htmlFor={`filter-${value}`}>{value}</Label>
                         </li>

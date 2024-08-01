@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import QuantityCounter from "../ui/QuantityCounter";
 import { Button } from "../ui/button";
 import useCartStore from "@/store/cartStore";
@@ -20,7 +20,17 @@ export default function AddToCart({
 }: Props) {
     const [prodCount, setProdCount] = useState(1);
     const queryClient = useQueryClient();
-    const { addItemToCart } = useCartStore();
+    const {
+        cartItems,
+        addItemToCart,
+        getItemQuantity,
+        increaseItemQuantity,
+        decreaseItemQuantity,
+    } = useCartStore();
+
+    useEffect(() => {
+        setProdCount(getItemQuantity(prodID) || 1);
+    }, [cartItems, prodID, getItemQuantity]);
 
     return (
         <>
@@ -28,6 +38,12 @@ export default function AddToCart({
                 className="w-full"
                 counter={prodCount}
                 setCounter={setProdCount}
+                onIncrement={() => {
+                    increaseItemQuantity(prodID);
+                }}
+                onDecrement={() => {
+                    decreaseItemQuantity(prodID);
+                }}
             />
             <Button
                 variant={"outline"}

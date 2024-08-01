@@ -21,7 +21,8 @@ export default async function ProductPage({
     return (
         <div className="container min-h-[calc(100svh-80px)]">
             <div className="relative mx-auto flex w-full max-w-[1000px] flex-col items-start justify-start pt-3 md:flex-row md:gap-7">
-                <HeroCarousel image={product.image} />
+                {/* // TODO : Modify the schema so that a single product can have multiple images  */}
+                <HeroCarousel images={[product.image]} />
                 <section id="product-details" className="flex w-full flex-col">
                     <section id="product-info">
                         <h1 className="mb-5 text-2xl font-bold">
@@ -139,12 +140,6 @@ export default async function ProductPage({
                 <div className="flex w-full flex-col gap-5">
                     <h1 className="w-full text-left text-4xl font-bold">
                         You Might Also Like
-                    </h1>
-                    {/* <SwiperCarousel data={data} /> */}
-                </div>
-                <div className="flex w-full flex-col gap-5">
-                    <h1 className="w-full text-left text-4xl font-bold">
-                        Recently Viewed
                     </h1>
                     {/* <SwiperCarousel data={data} /> */}
                 </div>

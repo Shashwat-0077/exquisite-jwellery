@@ -33,6 +33,8 @@ export default function QuantityCounter({
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     ) => {
         e.preventDefault();
+        if (!(counter > 1)) return;
+
         setCounter((prevState) => {
             return prevState - 1;
         });
