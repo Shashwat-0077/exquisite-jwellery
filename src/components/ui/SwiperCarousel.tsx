@@ -11,6 +11,7 @@ export default function SwiperCarousel({
     data,
 }: {
     data: {
+        ID: string;
         title: string;
         price: number;
         image: string;
@@ -50,6 +51,7 @@ export default function SwiperCarousel({
             {data.map((value, index) => (
                 <SwiperSlide key={index}>
                     <ProductCard
+                        id={value.ID}
                         className="px-2"
                         title={value.title}
                         price={value.price}
